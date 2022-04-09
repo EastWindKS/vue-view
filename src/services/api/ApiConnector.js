@@ -1,4 +1,5 @@
 import axios from "axios";
+import {Notify} from "quasar";
 
 export class ApiConnector {
 
@@ -26,8 +27,14 @@ export class ApiConnector {
                 Authorization: this.token
             }
         })
-            .then(r => Promise.resolve(r.data))
-            .catch(e => Promise.reject(e.response.data));
+            .then(result => Promise.resolve(result.data))
+            .catch(error => {
+                Notify.create({
+                    type: 'negative',
+                    message: error.response.data,
+                });
+               return  Promise.reject(error.response.data)
+            })
     }
 
     static getTokenFromLocalStorage() {

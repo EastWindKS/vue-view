@@ -31,42 +31,30 @@
         <q-btn label="Submit" type="submit" color="secondary" class="full-width"/>
       </div>
     </q-form>
-    <router-view/>
   </div>
 </template>
 
 <script>
-import {toRefs, reactive} from 'vue';
 import {ApiConnector} from "../services/api/ApiConnector";
-import {useQuasar} from 'quasar';
+import {setToLocalStorageAfterAuth} from "../services/jwtWorker";
 
 export default {
   name: "LoginPage",
-  setup() {
-    const loginModel = reactive({
-      userName: "",
-      password: ""
-    })
-
-    const $q = useQuasar();
-
-    const triggerNegative = (message) => {
-      $q.notify({
-        type: 'negative',
-        message: message
-      })
-    }
-
-    const onSubmit = async () => {
-      const api = new ApiConnector("Authenticate");
-      await api.post("Login", loginModel)
-          .then(r => console.log(r))
-          .catch(e => triggerNegative(e));
-    }
-
+  data() {
     return {
-      onSubmit,
-      ...toRefs(loginModel)
+      userName: "",
+      password: "",
+    }
+  },
+  methods: {
+    async onSubmit() {
+      const api = new ApiConnector("Authenticate");
+      await api.post("Login", {userName: this.userName, password: this.password})
+          .then(response => {
+            setToLocalStorageAfterAuth(response);
+            this.$router.push("/")
+          })
+          .catch(e => console.log(e));
     }
   }
 }
