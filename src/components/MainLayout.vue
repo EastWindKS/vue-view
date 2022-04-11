@@ -1,6 +1,5 @@
 <template>
   <q-layout view="lHh lpR lFf">
-
     <q-header elevated class="bg-green text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu_open" @click="toggleLeftDrawer"/>
@@ -17,7 +16,8 @@
         </q-btn>
         <q-icon name="account_circle" size="2rem" right class="cursor-pointer"/>
         <q-icon name="logout" size="2rem" right class="cursor-pointer"/>
-
+        <q-btn color="primary" to="/">1</q-btn>
+        <q-btn color="primary" to="/table">2</q-btn>
       </q-toolbar>
     </q-header>
 
@@ -29,7 +29,7 @@
             :nodes="menuList"
             selected-color="primary"
             v-model:selected="selected"
-            @update:selected="onSelected"
+            @update:selected="(value)=>onSelected(value)"
         />
       </div>
 
@@ -41,39 +41,41 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue'
-import {useRouter} from "vue-router";
 import {menuList} from "../static/menuList";
-import {useStore} from "vuex"
 
 export default {
-  setup() {
-    const tree = ref(null);
-    const router = useRouter();
-    const selected = ref(null);
-    const leftDrawerOpen = ref(false);
-    const store = useStore();
+  name: "MainLayout",
+  data() {
+    return {
+      selected: "",
+      leftDrawerOpen: false,
+      dense: true,
+      denseOpts: false,
+      menuList: menuList,
+      officesList: []
+    }
+  },
 
-    const onSelected = (value) => {
-      const node = tree.value.getNodeByKey(value);
+  created() {
+    this.officesList = this.getOfficesList;
+  },
+
+  computed: {
+    getOfficesList() {
+      return this.$store.getters["offices/getOffices"]
+    }
+  },
+
+  methods: {
+    onSelected(value) {
+      const node = this.$refs.tree.getNodeByKey(value);
       if (node?.route !== undefined) {
         console.log("finally")
       }
-    };
-
-    return {
-      onSelected,
-      tree,
-      menuList,
-      selected,
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      dense: ref(true),
-      denseOpts: ref(false),
-      officesList: computed(() => store.getters["offices/getOffices"])
-    }
+    },
+    toggleLeftDrawer() {
+      this.leftDrawerOpen = !this.leftDrawerOpen
+    },
   }
 }
 </script>

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import {ApiConnector} from "../services/api/ApiConnector";
+import ApiWorker from "../services/api/ApiWorker";
 import {setToLocalStorageAfterAuth} from "../services/jwtWorker";
 
 export default {
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      const api = new ApiConnector("Authenticate");
+      const api = new ApiWorker("Authenticate");
       await api.post("Login", {userName: this.userName, password: this.password})
           .then(response => {
             setToLocalStorageAfterAuth(response);

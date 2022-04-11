@@ -9,9 +9,8 @@ export const menuList = [
         icon: 'corporate_fare',
         selectable: false,
         children: [
-            {label: 'Organizations'},
-            {label: 'Leeds'},
-            {label: 'Individuals', icon: 'people', route: '/individuals'},
+            {label: 'Organizations', routes: "/organizations"},
+
         ]
     }
 ];
