@@ -3,7 +3,8 @@ import {Loading, LocalStorage} from "quasar";
 import {notifyError, success} from "../promiseResultService";
 
 export default class ApiWorker {
-    URI = "https://localhost:7179/api/";
+    //URI = "https://192.168.0.202:44301/api"; // outside server
+    URI = "https://localhost:7179/api/"; // localhost server
     token;
 
     constructor(controllerName) {

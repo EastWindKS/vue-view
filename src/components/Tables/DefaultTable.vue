@@ -7,7 +7,6 @@
         row-key="id"
         v-model:pagination="pagination"
         :filter="filter"
-        :filter-method="filtering"
         separator="cell"
         class="my-sticky-header-table"
     >
@@ -60,16 +59,10 @@ export default {
       type: String,
       required: true
     },
-
-    methodName: {
-      type: String,
-      required: false,
-      default: "getAll"
-    }
   },
 
   setup(props) {
-    const {title, columns, controllerName, methodName} = toRefs(props);
+    const {title, columns, controllerName} = toRefs(props);
     const filter = ref('');
     const {rows} = fetchTableRows(controllerName.value);
     const pagination = ref({
@@ -78,19 +71,12 @@ export default {
       rowsPerPage: 14
     });
 
-    const filtering = (rows, terms, cols, getCellValue) => {
-      return rows.filter(({nativeName}) => {
-        return nativeName.toLowerCase().includes(filter.value.toLowerCase())
-      })
-    }
-
     return {
       title,
       pagination,
       columns,
       rows,
-      filter,
-      filtering
+      filter
     }
   }
 }
@@ -113,6 +99,11 @@ export default {
   thead tr:first-child th
     top: 0
   /* this is when the loading indicator appears */
+
+
+
+
+
 
 
 

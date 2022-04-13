@@ -16,8 +16,6 @@
         </q-btn>
         <q-icon name="account_circle" size="2rem" right class="cursor-pointer"/>
         <q-icon name="logout" size="2rem" right class="cursor-pointer"/>
-        <q-btn color="primary" to="/">1</q-btn>
-        <q-btn color="primary" to="/table">2</q-btn>
       </q-toolbar>
     </q-header>
 
@@ -41,7 +39,7 @@
 </template>
 
 <script>
-import {menuList} from "../static/menuList";
+import {menuList} from "../../static/menuList";
 
 export default {
   name: "MainLayout",
@@ -69,10 +67,12 @@ export default {
   methods: {
     onSelected(value) {
       const node = this.$refs.tree.getNodeByKey(value);
+
       if (node?.route !== undefined) {
-        console.log("finally")
+        this.$router.push(node.route)
       }
     },
+
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
