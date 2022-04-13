@@ -8,6 +8,8 @@
         v-model:pagination="pagination"
         :filter="filter"
         separator="cell"
+        :selection="selectionType"
+        @row-dblclick="onDoubleClick"
         class="my-sticky-header-table"
     >
 
@@ -25,7 +27,6 @@
           </template>
         </q-input>
       </template>
-
       <template v-slot:no-data="{ icon, message, filter }">
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied"/>
@@ -37,6 +38,7 @@
       </template>
     </q-table>
   </div>
+  <slot name="modal" :isOpen="isOpen" :onCloseModal="onCloseModal"/>
 </template>
 
 <script>
@@ -59,24 +61,72 @@ export default {
       type: String,
       required: true
     },
+
+    selectionType: {
+      type: String,
+      required: false,
+      default: "none",
+      validator: function (type) {
+        return ['none', 'multiple', 'single'].includes(type)
+      }
+    },
+
+    actionTypeOnDoubleClick: {
+      type: String,
+      required: false,
+      default: "none",
+      validator: function (type) {
+        return ['none', 'modal', 'card'].includes(type)
+      }
+    },
+
+    routeToCard: {
+      type: String,
+      required: false
+    }
   },
 
   setup(props) {
-    const {title, columns, controllerName} = toRefs(props);
+    const {title, columns, controllerName, selectionType, actionTypeOnDoubleClick, routeToCard} = toRefs(props);
     const filter = ref('');
+    const isOpen = ref(false);
     const {rows} = fetchTableRows(controllerName.value);
     const pagination = ref({
       sortBy: 'desc',
       descending: false,
-      rowsPerPage: 14
+      rowsPerPage: 12
     });
+
+    const onCloseModal = () => {
+      isOpen.value = false;
+    }
+
+    const onDoubleClick = (evt, row, index) => {
+
+      switch (actionTypeOnDoubleClick.value) {
+        case "none":
+          break;
+        case "modal":
+          isOpen.value = true;
+          break;
+        case "card":
+          this.$router.push(routeToCard.value);
+          break;
+        default:
+          break;
+      }
+    }
 
     return {
       title,
       pagination,
       columns,
       rows,
-      filter
+      filter,
+      selectionType,
+      isOpen,
+      onDoubleClick,
+      onCloseModal
     }
   }
 }
@@ -99,6 +149,28 @@ export default {
   thead tr:first-child th
     top: 0
   /* this is when the loading indicator appears */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
