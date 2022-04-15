@@ -9,12 +9,14 @@
         :filter="filter"
         separator="cell"
         :selection="selectionType"
+        :loading="loading"
         @row-dblclick="onDoubleClick"
         class="my-sticky-header-table"
     >
-
       <template v-slot:loading>
-        <q-inner-loading showing color="primary"/>
+        <q-inner-loading showing color="primary">
+          <q-spinner-hourglass size="50px" color="secondary"/>
+        </q-inner-loading>
       </template>
 
       <template v-slot:top>
@@ -27,7 +29,8 @@
           </template>
         </q-input>
       </template>
-      <template v-slot:no-data="{ icon, message, filter }">
+
+      <template v-if="isShowNoDataMessage" v-slot:no-data="{ icon, message, filter }">
         <div class="full-width row flex-center text-accent q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied"/>
           <span>
@@ -36,14 +39,15 @@
           <q-icon size="2em" :name="filter ? 'filter_b_and_w' : icon"/>
         </div>
       </template>
+
     </q-table>
   </div>
   <slot name="modal" :isOpen="isOpen" :onCloseModal="onCloseModal"/>
 </template>
-
 <script>
-import {ref, toRefs} from 'vue'
+import {ref, toRefs, computed} from 'vue'
 import fetchTableRows from "../../services/api/useTableRowsFetch.js";
+import {useI18n} from 'vue-i18n/index'
 
 export default {
   props: {
@@ -90,11 +94,13 @@ export default {
     const {title, columns, controllerName, selectionType, actionTypeOnDoubleClick, routeToCard} = toRefs(props);
     const filter = ref('');
     const isOpen = ref(false);
-    const {rows} = fetchTableRows(controllerName.value);
+    const {t} = useI18n();
+
+    const {rows, loading} = fetchTableRows(controllerName.value);
     const pagination = ref({
       sortBy: 'desc',
       descending: false,
-      rowsPerPage: 12
+      rowsPerPage: 14
     });
 
     const onCloseModal = () => {
@@ -117,7 +123,12 @@ export default {
       }
     }
 
+    const isShowNoDataMessage = computed(() => {
+      return loading && rows.length < 1;
+    })
+
     return {
+      t,
       title,
       pagination,
       columns,
@@ -125,8 +136,10 @@ export default {
       filter,
       selectionType,
       isOpen,
+      loading,
       onDoubleClick,
-      onCloseModal
+      onCloseModal,
+      isShowNoDataMessage
     }
   }
 }
@@ -149,6 +162,19 @@ export default {
   thead tr:first-child th
     top: 0
   /* this is when the loading indicator appears */
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

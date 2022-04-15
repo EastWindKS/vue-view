@@ -1,4 +1,4 @@
-import {Loading, Notify} from "quasar";
+import {Notify} from "quasar";
 
 export const notifyError = (error) => {
     let message = error.response.data;
@@ -11,11 +11,8 @@ export const notifyError = (error) => {
         type: 'negative',
         message: message,
     });
-    Loading.hide();
+
     return Promise.reject(error.response.data);
 }
 
-export const success = (result) => {
-    Loading.hide();
-    return Promise.resolve(result.data);
-}
+

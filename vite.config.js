@@ -1,15 +1,22 @@
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
+import {quasar, transformAssetUrls} from '@quasar/vite-plugin'
+import vueI18n from '@intlify/vite-plugin-vue-i18n'
+
 
 export default defineConfig({
-  plugins: [
-    vue({
-      template: { transformAssetUrls }
-    }),
+    plugins: [
+        vue({
+            template: {transformAssetUrls}
+        }),
+        vueI18n({
+            include: path.resolve(__dirname, './src/locales/**'),
+            compositionOnly: true
+        }),
 
-    quasar({
-      sassVariables: 'src/assets/quasar-variables.sass'
-    })
-  ]
+        quasar({
+            sassVariables: 'src/assets/quasar-variables.sass'
+        })
+    ]
 })

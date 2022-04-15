@@ -1,10 +1,11 @@
 import axios from "axios";
-import {Loading, LocalStorage} from "quasar";
-import {notifyError, success} from "../promiseResultService";
+import {LocalStorage} from "quasar";
+import {notifyError} from "../promiseResultService";
 
 export default class ApiWorker {
-    //URI = "https://192.168.0.202:44301/api"; // outside server
-    URI = "https://localhost:7179/api/"; // localhost server
+    //clear local storage before use
+    URI = "https://192.168.0.202:44301/api/"; // outside server
+    // URI = "https://localhost:7179/api/"; // localhost server
     token;
 
     constructor(controllerName) {
@@ -13,24 +14,22 @@ export default class ApiWorker {
     }
 
     async get(methodName, queryParams) {
-        Loading.show({spinnerColor: 'secondary'});
         return await axios.get(this.URI + methodName, {
             params: queryParams, headers: {
                 Authorization: this.token
             }
         })
-            .then(result => success(result))
+            .then(result => Promise.resolve(result.data))
             .catch(error => notifyError(error));
     }
 
     async post(methodName, data) {
-        Loading.show({spinnerColor: 'secondary'});
         return await axios.post(this.URI + methodName, data, {
             headers: {
                 Authorization: this.token
             }
         })
-            .then(result => success(result))
+            .then(result => Promise.resolve(result.data))
             .catch(error => notifyError(error))
     }
 

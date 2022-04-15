@@ -4,6 +4,7 @@ import {useStore} from "vuex";
 export default function fetchTableRows(controllerName, methodName) {
     const store = useStore();
     const rows = ref([]);
+    const loading = ref(true);
 
     onMounted(async () => {
         if (store.getters[`${controllerName}/getAll`].length === 0) {
@@ -11,10 +12,12 @@ export default function fetchTableRows(controllerName, methodName) {
         }
 
         rows.value = store.getters[`${controllerName}/getAll`];
+        loading.value = false;
     });
 
     return {
-        rows
+        rows,
+        loading
     }
 }
 

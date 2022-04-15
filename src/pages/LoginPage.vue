@@ -30,6 +30,9 @@
       <div>
         <q-btn label="Submit" type="submit" color="secondary" class="full-width"/>
       </div>
+      <q-inner-loading :showing="visible">
+        <q-spinner-hourglass size="50px" color="secondary"/>
+      </q-inner-loading>
     </q-form>
   </div>
 </template>
@@ -37,24 +40,29 @@
 <script>
 import ApiWorker from "../services/api/ApiWorker";
 import {setToLocalStorageAfterAuth} from "../services/jwtWorker";
+import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 
 export default {
   name: "LoginPage",
+  components: {LanguageSwitcher},
   data() {
     return {
       userName: "",
       password: "",
+      visible: false
     }
   },
   methods: {
     async onSubmit() {
+      this.visible = true;
       const api = new ApiWorker("Authenticate");
       await api.post("Login", {userName: this.userName, password: this.password})
           .then(response => {
             setToLocalStorageAfterAuth(response);
-            this.$router.push("/")
+            this.visible = false;
+            this.$router.push("/");
           })
-          .catch(e => console.log(e));
+          .catch(() => this.visible = false);
     }
   }
 }
