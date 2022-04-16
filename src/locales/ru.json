@@ -1,4 +1,7 @@
 {
   "mail": "Почта",
-  "counterparties": "Контрагенты"
+  "counterparties": "Контрагенты",
+  "login": "логин",
+  "password": "пароль",
+  "organizations": "Организации"
 }

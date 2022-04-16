@@ -21,8 +21,9 @@
         <q-btn dense color="deep-purple-6" rounded icon="notifications" class="q-ml-md">
           <q-badge color="red" floating>4</q-badge>
         </q-btn>
+
         <q-icon name="account_circle" size="2rem" right class="cursor-pointer"/>
-        <q-icon name="logout" size="2rem" right class="cursor-pointer"/>
+        <q-icon name="logout" size="2rem" right class="cursor-pointer" @click="logout"/>
       </q-toolbar>
     </q-header>
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" behavior="desktop" elevated>
@@ -50,6 +51,7 @@ import {onMounted, ref, watch} from "vue";
 import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 import {useI18n} from "vue-i18n/index";
+import {clearLocalStorage} from "../services/jwtWorker";
 
 export default {
   name: "MainLayout",
@@ -58,7 +60,7 @@ export default {
   setup() {
     onMounted(() => {
       officesList.value = store.getters["offices/getOffices"];
-      menuList.value = setLocale(menuItems);
+      menuList.value = menuItems.map((item) => setLocale(item));
     });
 
     const {locale, t} = useI18n();
@@ -82,15 +84,27 @@ export default {
       if (node?.route !== undefined) {
         router.push(node.route)
       }
+    };
+
+    const logout = () => {
+      clearLocalStorage();
+      router.push("/login")
+    };
+
+    const setLocale = (obj) => {
+      let newObj = {...obj, label: t(obj.label), children: []};
+
+      if (obj.children) {
+        obj.children.forEach((item) => {
+          newObj.children.push(setLocale(item))
+        })
+      }
+
+      return newObj;
     }
 
-    const setLocale = (list) => {
-      return list.map((menuItem) => {
-        return {...menuItem, label: t(menuItem.label)}
-      });
-    }
     watch(locale, () => {
-      menuList.value = setLocale(menuItems);
+      menuList.value = menuItems.map((item) => setLocale(item));
     });
 
     return {
@@ -101,6 +115,7 @@ export default {
       dense,
       denseOpts,
       menuList,
+      logout,
       toggleLeftDrawer,
       onSelected
     }

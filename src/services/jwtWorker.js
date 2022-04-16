@@ -12,3 +12,7 @@ export const isValidToken = () => {
     const dateNow = Date.now();
     return validTimestamp > dateNow;
 }
+
+export const clearLocalStorage = () => {
+    LocalStorage.clear();
+}

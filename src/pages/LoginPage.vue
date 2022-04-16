@@ -8,7 +8,7 @@
           square
           outlined
           v-model="userName"
-          label="login"
+          :label="loginLabel"
           lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type login']">
         <template v-slot:prepend>
@@ -20,7 +20,7 @@
           square
           type="password"
           v-model="password"
-          label="password"
+          :label="passwordLabel"
           lazy-rules
           :rules="[val => val !== null && val !== '' || 'Please type password']">
         <template v-slot:prepend>
@@ -41,34 +41,42 @@
 import ApiWorker from "../services/api/ApiWorker";
 import {setToLocalStorageAfterAuth} from "../services/jwtWorker";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+import {useI18n} from "vue-i18n/index";
 
 export default {
   name: "LoginPage",
   components: {LanguageSwitcher},
-  data() {
-    return {
-      userName: "",
-      password: "",
-      visible: false
-    }
-  },
-  methods: {
-    async onSubmit() {
-      this.visible = true;
+  setup() {
+    const router = useRouter();
+    const {t} = useI18n();
+    const userName = ref("");
+    const password = ref("");
+    const visible = ref(false);
+    const passwordLabel = ref(t('password'));
+    const loginLabel = ref(t('login'));
+
+    const onSubmit = async () => {
+      visible.value = true;
       const api = new ApiWorker("Authenticate");
-      await api.post("Login", {userName: this.userName, password: this.password})
+      await api.post("Login", {userName: userName.value, password: password.value})
           .then(response => {
             setToLocalStorageAfterAuth(response);
-            this.visible = false;
-            this.$router.push("/");
+            visible.value = false;
+            router.push("/");
           })
-          .catch(() => this.visible = false);
+          .catch(() => visible.value = false);
+    }
+
+    return {
+      userName,
+      password,
+      visible,
+      passwordLabel,
+      loginLabel,
+      onSubmit
     }
   }
 }
-
 </script>
-
-<style scoped>
-
-</style>

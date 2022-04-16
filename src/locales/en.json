@@ -1,4 +1,7 @@
 {
   "mail": "Mail",
-  "counterparties": "Counterparties"
+  "counterparties": "Counterparties",
+  "login": "login",
+  "password": "password",
+  "organizations": "Organizations"
 }
