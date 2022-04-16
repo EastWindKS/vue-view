@@ -52,6 +52,7 @@ import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 import {useI18n} from "vue-i18n/index";
 import {clearLocalStorage} from "../services/jwtWorker";
+import {useTranslate} from "../services/useTranslate"
 
 export default {
   name: "MainLayout",
@@ -60,10 +61,10 @@ export default {
   setup() {
     onMounted(() => {
       officesList.value = store.getters["offices/getOffices"];
-      menuList.value = menuItems.map((item) => setLocale(item));
+      menuList.value = menuItems.map((item) => useTranslate(item));
     });
 
-    const {locale, t} = useI18n();
+    const {locale} = useI18n();
     const officesList = ref([]);
     const leftDrawerOpen = ref(false);
     const dense = ref(true);
@@ -91,20 +92,8 @@ export default {
       router.push("/login")
     };
 
-    const setLocale = (obj) => {
-      let newObj = {...obj, label: t(obj.label), children: []};
-
-      if (obj.children) {
-        obj.children.forEach((item) => {
-          newObj.children.push(setLocale(item))
-        })
-      }
-
-      return newObj;
-    }
-
     watch(locale, () => {
-      menuList.value = menuItems.map((item) => setLocale(item));
+      menuList.value = menuItems.map((item) => useTranslate(item));
     });
 
     return {

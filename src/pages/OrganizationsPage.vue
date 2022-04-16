@@ -14,7 +14,7 @@ import TestDialog from "../components/dialogs/TestDialog.vue"
 export default {
   name: "OrganizationsPage",
   components: {DefaultTable, TestDialog},
-  data() {
+  setup() {
     return {
       columns
     }

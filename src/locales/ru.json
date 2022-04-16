@@ -3,5 +3,10 @@
   "counterparties": "Контрагенты",
   "login": "логин",
   "password": "пароль",
-  "organizations": "Организации"
+  "organizations": "Организации",
+  "country": "Страна",
+  "name_item": "Наименование",
+  "managers": "Менеджеры",
+  "offices": "Офисы",
+  "filters": "Фильтры"
 }

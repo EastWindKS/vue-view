@@ -3,7 +3,7 @@
     <q-table
         :title="title"
         :rows="rows"
-        :columns="columns"
+        :columns="translatedColumns"
         row-key="id"
         v-model:pagination="pagination"
         :filter="filter"
@@ -23,6 +23,9 @@
         <div class="text-h6 q-pr-md">{{ title }}</div>
         <q-btn color="secondary" round icon="add" size="md" @click=""/>
         <q-space/>
+
+        <q-btn color="secondary" round size="md" icon="filter_list" class="q-mr-xl"/>
+
         <q-input dense debounce="300" color="primary" v-model="filter">
           <template v-slot:append>
             <q-icon name="search"/>
@@ -45,9 +48,10 @@
   <slot name="modal" :isOpen="isOpen" :onCloseModal="onCloseModal"/>
 </template>
 <script>
-import {ref, toRefs, computed} from 'vue'
+import {ref, toRefs, computed, watch} from 'vue'
 import fetchTableRows from "../../services/api/useTableRowsFetch.js";
-import {useI18n} from 'vue-i18n/index'
+import {useTranslate} from "../../services/useTranslate";
+import {useI18n} from "vue-i18n/index";
 
 export default {
   props: {
@@ -91,12 +95,19 @@ export default {
   },
 
   setup(props) {
+    const {locale, t} = useI18n();
     const {title, columns, controllerName, selectionType, actionTypeOnDoubleClick, routeToCard} = toRefs(props);
     const filter = ref('');
     const isOpen = ref(false);
-    const {t} = useI18n();
-
+    const filterLabel = ref(t('filters'));
     const {rows, loading} = fetchTableRows(controllerName.value);
+    const translatedColumns = ref(columns.value.map((column) => useTranslate(column)));
+
+    watch(locale, () => {
+      translatedColumns.value = columns.value.map((item) => useTranslate(item));
+      filterLabel.value = t('filters')
+    });
+
     const pagination = ref({
       sortBy: 'desc',
       descending: false,
@@ -128,10 +139,11 @@ export default {
     })
 
     return {
-      t,
       title,
+      filterLabel,
       pagination,
       columns,
+      translatedColumns,
       rows,
       filter,
       selectionType,
@@ -162,6 +174,21 @@ export default {
   thead tr:first-child th
     top: 0
   /* this is when the loading indicator appears */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

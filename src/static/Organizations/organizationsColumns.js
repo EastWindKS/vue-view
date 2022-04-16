@@ -6,8 +6,8 @@
  */
 
 export default [
-    {name: 'name', required: true, label: 'Name', align: 'left', field: row => row.nativeName, sortable: true},
-    {name: 'country', required: true, label: 'Country', align: 'left', field: row => row.country, sortable: true},
-    {name: 'managers', align: 'center', label: 'Managers', field: row => row.managers, sortable: false},
-    {name: 'office', align: 'center', label: 'Offices', field: row => row.offices, sortable: false}
+    {name: 'name', required: true, label: 'name_item', align: 'left', field: row => row.nativeName, sortable: true},
+    {name: 'country', required: true, label: 'country', align: 'left', field: row => row.country, sortable: true},
+    {name: 'managers', align: 'center', label: 'managers', field: row => row.managers, sortable: false},
+    {name: 'office', align: 'center', label: 'offices', field: row => row.offices, sortable: false}
 ]

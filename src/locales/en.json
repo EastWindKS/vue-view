@@ -3,5 +3,10 @@
   "counterparties": "Counterparties",
   "login": "login",
   "password": "password",
-  "organizations": "Organizations"
+  "organizations": "Organizations",
+  "country": "Country",
+  "name_item": "Name",
+  "managers": "Managers",
+  "offices": "Offices",
+  "filters": "Filters"
 }
