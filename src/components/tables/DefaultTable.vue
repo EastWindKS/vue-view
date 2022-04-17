@@ -21,10 +21,18 @@
 
       <template v-slot:top>
         <div class="text-h6 q-pr-md">{{ title }}</div>
-        <q-btn color="secondary" round icon="add" size="md" @click=""/>
+        <q-btn color="secondary" round icon="add" size="md">
+          <q-tooltip class="bg-purple text-body2" :offset="[10, 10]" transition-show="rotate" transition-hide="rotate">
+            {{ t('add') }}
+          </q-tooltip>
+        </q-btn>
         <q-space/>
 
-        <q-btn color="secondary" round size="md" icon="filter_list" class="q-mr-xl"/>
+        <q-btn color="secondary" round size="md" icon="filter_list" class="q-mr-xl" @click="onFilterButtonClick">
+          <q-tooltip class="bg-purple text-body2" :offset="[10, 10]" transition-show="rotate" transition-hide="rotate">
+            {{ t('filters') }}
+          </q-tooltip>
+        </q-btn>
 
         <q-input dense debounce="300" color="primary" v-model="filter">
           <template v-slot:append>
@@ -46,14 +54,17 @@
     </q-table>
   </div>
   <slot name="modal" :isOpen="isOpen" :onCloseModal="onCloseModal"/>
+  <filter-dialog :is-open="isFilterDialogOpen" @onCloseFilterModal="onCloseFilterModal" :controller-name="controllerName"/>
 </template>
 <script>
-import {ref, toRefs, computed, watch} from 'vue'
+import {ref, toRefs, computed} from 'vue'
 import fetchTableRows from "../../services/api/useTableRowsFetch.js";
 import {useTranslate} from "../../services/useTranslate";
 import {useI18n} from "vue-i18n/index";
+import FilterDialog from "../dialogs/FilterDialog.vue";
 
 export default {
+  components: {FilterDialog},
   props: {
     title: {
       type: String,
@@ -95,18 +106,14 @@ export default {
   },
 
   setup(props) {
-    const {locale, t} = useI18n();
+    const {t} = useI18n();
     const {title, columns, controllerName, selectionType, actionTypeOnDoubleClick, routeToCard} = toRefs(props);
     const filter = ref('');
     const isOpen = ref(false);
+    const isFilterDialogOpen = ref(false);
     const filterLabel = ref(t('filters'));
     const {rows, loading} = fetchTableRows(controllerName.value);
     const translatedColumns = ref(columns.value.map((column) => useTranslate(column)));
-
-    watch(locale, () => {
-      translatedColumns.value = columns.value.map((item) => useTranslate(item));
-      filterLabel.value = t('filters')
-    });
 
     const pagination = ref({
       sortBy: 'desc',
@@ -116,6 +123,10 @@ export default {
 
     const onCloseModal = () => {
       isOpen.value = false;
+    }
+
+    const onCloseFilterModal = () => {
+      isFilterDialogOpen.value = false;
     }
 
     const onDoubleClick = (evt, row, index) => {
@@ -134,6 +145,10 @@ export default {
       }
     }
 
+    const onFilterButtonClick = () => {
+      isFilterDialogOpen.value = true;
+    }
+
     const isShowNoDataMessage = computed(() => {
       return loading && rows.length < 1;
     })
@@ -143,14 +158,19 @@ export default {
       filterLabel,
       pagination,
       columns,
+      controllerName,
       translatedColumns,
       rows,
       filter,
+      isFilterDialogOpen,
       selectionType,
       isOpen,
       loading,
+      t,
       onDoubleClick,
       onCloseModal,
+      onFilterButtonClick,
+      onCloseFilterModal,
       isShowNoDataMessage
     }
   }
@@ -174,6 +194,13 @@ export default {
   thead tr:first-child th
     top: 0
   /* this is when the loading indicator appears */
+
+
+
+
+
+
+
 
 
 

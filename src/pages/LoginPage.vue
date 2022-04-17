@@ -39,7 +39,7 @@
 
 <script>
 import ApiWorker from "../services/api/ApiWorker";
-import {setToLocalStorageAfterAuth} from "../services/jwtWorker";
+import {setToLocalStorageAfterAuth} from "../services/localStorageWorker";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
 import {ref} from "vue";
 import {useRouter} from "vue-router";

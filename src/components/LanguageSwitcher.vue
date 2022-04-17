@@ -15,7 +15,6 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>{{ scope.opt.label }}</q-item-label>
-              <q-item-label caption>{{ scope.opt.description }}</q-item-label>
             </q-item-section>
           </q-item>
         </template>
@@ -35,30 +34,29 @@
 <script>
 import {ref, onMounted} from 'vue';
 import {useQuasar} from 'quasar';
-import {useI18n} from 'vue-i18n/index'
+import {useRouter} from "vue-router";
+import {getLocale, setLocale} from "../services/localStorageWorker";
 
 export default {
   setup() {
     const $q = useQuasar();
+    const router = useRouter();
     const model = ref(null);
     const options = ref([
-      {label: 'English', icon: 'svguse:gb-flag.svg#flag-icons-gb', locale: "en-GB"},
+      {label: 'English', icon: 'svguse:gb-flag.svg#flag-icons-gb', locale: "en"},
       // {label: 'Ukrainian', icon: 'svguse:ua-flag.svg#flag-icons-ua'},
       {label: 'Русский', icon: 'svguse:ru-flag.svg#flag-icons-ru', locale: "ru-RU"}
     ]);
 
-    const {locale} = useI18n({
-      useScope: 'global'
-    })
-
     const changeLocale = (value) => {
       switch (value.locale) {
-        case "en-GB":
+        case "en":
           import(
               'quasar/lang/en-GB'
               ).then(lang => {
             $q.lang.set(lang.default);
-            locale.value = 'en'
+            setLocale("en")
+            router.go();
           })
           break;
 
@@ -67,27 +65,19 @@ export default {
               'quasar/lang/ru'
               ).then(lang => {
             $q.lang.set(lang.default);
-            locale.value = 'ru'
+            setLocale("ru-RU")
+            router.go();
           })
           break;
 
         default:
           return;
       }
-
     }
 
     onMounted(() => {
-      const browserLocale = $q.lang.getLocale();
-      const findLocale = options.value.find(({locale}) => locale === browserLocale);
-
-      if (findLocale === undefined) {
-        model.value = options[0];
-      } else {
-        model.value = findLocale;
-      }
-
-      changeLocale(model.value)
+      const userLocale = getLocale();
+      model.value = options.value.find(({locale}) => locale === userLocale);
     })
 
     return {

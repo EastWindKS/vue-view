@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import LoginPage from "../pages/LoginPage.vue";
 import ErrorPage from "../pages/ErrorPage.vue";
 import MainLayout from "../layouts/MainLayout.vue";
-import {isValidToken} from "../services/jwtWorker";
+import {isValidToken} from "../services/localStorageWorker";
 import OrganizationsPage from "../pages/OrganizationsPage.vue";
 
 const routes = [

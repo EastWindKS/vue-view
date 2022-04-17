@@ -47,11 +47,10 @@
 <script>
 import {menuItems} from "../static/menuList";
 import LanguageSwitcher from "../components/LanguageSwitcher.vue";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
-import {useI18n} from "vue-i18n/index";
-import {clearLocalStorage} from "../services/jwtWorker";
+import {clearLocalStorageOnLogout} from "../services/localStorageWorker";
 import {useTranslate} from "../services/useTranslate"
 
 export default {
@@ -64,7 +63,6 @@ export default {
       menuList.value = menuItems.map((item) => useTranslate(item));
     });
 
-    const {locale} = useI18n();
     const officesList = ref([]);
     const leftDrawerOpen = ref(false);
     const dense = ref(true);
@@ -88,13 +86,9 @@ export default {
     };
 
     const logout = () => {
-      clearLocalStorage();
+      clearLocalStorageOnLogout();
       router.push("/login")
     };
-
-    watch(locale, () => {
-      menuList.value = menuItems.map((item) => useTranslate(item));
-    });
 
     return {
       officesList,

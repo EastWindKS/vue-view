@@ -8,5 +8,8 @@
   "name_item": "Name",
   "managers": "Managers",
   "offices": "Offices",
-  "filters": "Filters"
+  "filters": "Filters",
+  "reset": "Reset",
+  "filter_out": "Filter out",
+  "add": "Add"
 }

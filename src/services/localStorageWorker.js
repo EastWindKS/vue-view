@@ -13,6 +13,15 @@ export const isValidToken = () => {
     return validTimestamp > dateNow;
 }
 
-export const clearLocalStorage = () => {
-    LocalStorage.clear();
+export const clearLocalStorageOnLogout = () => {
+    LocalStorage.remove("token");
+    LocalStorage.remove("valid");
+}
+
+export const getLocale = () => {
+    return LocalStorage.getItem("locale");
+}
+
+export const setLocale = (locale) => {
+    return LocalStorage.set("locale", locale);
 }
