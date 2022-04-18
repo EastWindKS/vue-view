@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isOpen" persistent>
+  <q-dialog v-model="isOpen" persistent full-width>
     <q-layout view="hHh lpR fFf" container class="bg-white">
 
       <q-header class="bg-white text-white q-pa-sm">
@@ -7,8 +7,17 @@
       </q-header>
 
       <q-page-container>
-        <q-list bordered padding v-for="filter in filters">
-          <filter-item :filter-item="filter"/>
+        <q-list bordered padding>
+
+          <q-item-label header class="text-weight-bold color-red">Collections</q-item-label>
+          <filter-item v-for="filter in collectionsFilters" :filter-item="filter" :is-collection="true"/>
+
+          <q-item-label class="text-weight-bold color-red" header>Selects</q-item-label>
+          <filter-item v-for="filter in selectFilters" :filter-item="filter" :is-select="true"/>
+
+          <q-item-label class="text-weight-bold color-red" header>Inputs</q-item-label>
+          <filter-item v-for="filter in inputFilters" :filter-item="filter" :is-input="true"/>
+
         </q-list>
       </q-page-container>
 
@@ -22,11 +31,12 @@
 </template>
 
 <script>
-import {toRefs, ref, watch} from 'vue';
+import {toRefs, ref, watch, computed} from 'vue';
 import {useI18n} from "vue-i18n/index";
 import {useStore} from "vuex";
 import {useQuasar} from 'quasar';
 import FilterItem from "../filters/FilterItem.vue";
+import PropertyDataTypes from "../../static/PropertyDataTypes";
 
 export default {
   components: {FilterItem},
@@ -69,12 +79,27 @@ export default {
       emit("onCloseFilterModal");
     }
 
+    const collectionsFilters = computed(() => {
+      return filters.value.filter((f) => f.propertyDataTypeId === PropertyDataTypes.Collection);
+    })
+
+    const selectFilters = computed(() => {
+      return filters.value.filter((f) => f.controllerName !== null);
+    })
+
+    const inputFilters = computed(() => {
+      return filters.value.filter((f) => f.propertyDataTypeId !== PropertyDataTypes.Collection && f.controllerName === null);
+    })
+
     return {
       loading,
       filters,
       isOpen,
       onClose,
       onFilter,
+      selectFilters,
+      inputFilters,
+      collectionsFilters,
       t,
     }
   }
