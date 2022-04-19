@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-table
         :title="title"
-        :rows="rows"
+        :rows="data"
         :columns="translatedColumns"
         row-key="id"
         v-model:pagination="pagination"
@@ -58,7 +58,7 @@
 </template>
 <script>
 import {ref, toRefs, computed} from 'vue'
-import fetchTableRows from "../../services/api/useTableRowsFetch.js";
+import useGetDataTable from "../../services/api/useGetDataTable.js";
 import {useTranslate} from "../../services/useTranslate";
 import {useI18n} from "vue-i18n/index";
 import FilterDialog from "../dialogs/FilterDialog.vue";
@@ -112,7 +112,7 @@ export default {
     const isOpen = ref(false);
     const isFilterDialogOpen = ref(false);
     const filterLabel = ref(t('filters'));
-    const {rows, loading} = fetchTableRows(controllerName.value);
+    const {data, loading} = useGetDataTable(controllerName.value);
     const translatedColumns = ref(columns.value.map((column) => useTranslate(column)));
 
     const pagination = ref({
@@ -150,7 +150,7 @@ export default {
     }
 
     const isShowNoDataMessage = computed(() => {
-      return loading && rows.length < 1;
+      return loading && data.length < 1;
     })
 
     return {
@@ -160,7 +160,7 @@ export default {
       columns,
       controllerName,
       translatedColumns,
-      rows,
+      data,
       filter,
       isFilterDialogOpen,
       selectionType,

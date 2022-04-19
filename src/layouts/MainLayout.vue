@@ -59,7 +59,7 @@ export default {
 
   setup() {
     onMounted(() => {
-      officesList.value = store.getters["offices/getOffices"];
+      officesList.value = store.getters["Offices/getOffices"];
       menuList.value = menuItems.map((item) => useTranslate(item));
     });
 

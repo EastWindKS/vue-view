@@ -63,8 +63,8 @@ export default {
     watch(isOpen, async () => {
       if (isOpen.value) {
         $q.loading.show();
-        await store.dispatch(`filters/getAll`, controllerName.value);
-        filters.value = store.getters[`filters/getAll`];
+        await store.dispatch(`Filters/getAll`, controllerName.value);
+        filters.value = store.getters[`Filters/getAll`];
         $q.loading.hide();
       }
 

@@ -1,5 +1,5 @@
 export default {
     getAll(state) {
-        return state.currenciesList
+        return state.countriesList
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <default-table :title="title" :columns="columns" controller-name="organizations" action-type-on-double-click="modal">
+  <default-table :title="title" :columns="columns" controller-name="Organizations" action-type-on-double-click="modal">
     <template #modal="{isOpen, onCloseModal}">
       <test-dialog :alert="isOpen" @onCloseModal="onCloseModal"/>
     </template>
