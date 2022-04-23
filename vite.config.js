@@ -12,7 +12,8 @@ export default defineConfig({
         }),
         vueI18n({
             include: path.resolve(__dirname, './src/locales/**'),
-            compositionOnly: true
+            compositionOnly: true,
+            runtimeOnly: false
         }),
 
         quasar({
